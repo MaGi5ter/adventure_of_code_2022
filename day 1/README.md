@@ -1,1 +1,3 @@
-#DAY 1 ANSWERS
+DAY 1 ANSWERS
+
+part_one: 68923
