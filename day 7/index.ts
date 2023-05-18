@@ -68,8 +68,9 @@ for (const command of input) { //CREATES A TREE FROM INPUT
 }
 
 let totalmax100k = 0
+let deleteSizes:number[] = []
 
-async function calculateSize(folder:Object) {
+async function calculateSize(folder:Object,deletsize:number = -1) {
 
     let size = 0
 
@@ -79,11 +80,15 @@ async function calculateSize(folder:Object) {
             if(iterator.size == 0) {
 
                 // setTimeout(async () => {
-                    let inSize = await calculateSize(iterator)
-                    console.log(inSize)
+                    let inSize = await calculateSize(iterator,deletsize)
                     size += inSize
 
                     if(inSize <= 100000) totalmax100k += inSize
+
+                    if(deletsize != -1) {
+                        if(inSize > deletsize) deleteSizes.push(inSize)
+                    }
+
                 // }, 0);
     
             }else {
@@ -99,13 +104,24 @@ async function calculateSize(folder:Object) {
     return size
 }
 
-async function name() {
-    let total = await calculateSize(tree)
 
-    console.log(total,totalmax100k)
+
+async function runitinasync() {
+    let total = await calculateSize(tree)
+    
+    console.log('FIRST PART ANSWER:',totalmax100k)
+
+    let neededSpace = 30000000
+    let diskSpace = 70000000
+    let freeSpace = diskSpace - total
+    let toDelete = neededSpace - freeSpace
+
+    await calculateSize(tree,toDelete)
+
+    console.log('SECOD PART ANSWER:',Math.min(...deleteSizes))
 }
 
-name()
+runitinasync()
 
 // saveObjectToFile(tree,'./test.json')//JUST FOR TESTS
 // console.log(tree)
